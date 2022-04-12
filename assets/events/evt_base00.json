@@ -1,0 +1,14 @@
+{
+    "id": "EG_001",
+    "scenes": [
+        {
+            "name": "Test Scene 1",
+            "body": "Test Test Test Test",
+            "choices": [
+                {
+                    "choice_body": "Do a thing with ${str}"
+                }
+            ]
+        }
+    ]
+}
