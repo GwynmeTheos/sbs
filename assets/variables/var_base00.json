@@ -1,0 +1,39 @@
+[
+    {
+        "name": "strength",
+        "base": 0,
+        "sidebar": {
+            "show": true,
+            "min": -10,
+            "max": 10,
+            "behaviour": "pointer"
+        },
+        "descriptor": {
+            "behaviour": "closest",
+            "possibleValues": [
+                {
+                    "value": -10,
+                    "body": "weak"
+                },
+                {
+                    "value": 10,
+                    "body": "strong"
+                }
+            ]
+        }
+    },
+    {
+        "name": "body",
+        "base": 0,
+        "sidebar": {
+            "show": false,
+            "min": null,
+            "max": null,
+            "behaviour": null
+        },
+        "descriptor": {
+            "behaviour": "single",
+            "possibleValues": "nice body"
+        }
+    }
+]

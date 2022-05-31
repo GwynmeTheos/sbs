@@ -1,14 +1,35 @@
-{
-    "id": "EG_001",
-    "scenes": [
-        {
-            "name": "Test Scene 1",
-            "body": "Test Test Test Test",
-            "choices": [
-                {
-                    "choice_body": "Do a thing with ${str}"
-                }
-            ]
-        }
-    ]
-}
+[
+    {
+        "id": "EG_001",
+        "name": "Test Event",
+        "scenes": [
+            {
+                "id": "EG_001-001",
+                "name": "Test Scene 1",
+                "body": "Test Test Test Test",
+                "choices": [
+                    {
+                        "body": "Do a thing with ${str}",
+                        "requirements": [
+                            {
+                                "variable": "strength",
+                                "min": 10,
+                                "max": null,
+                                "exact": null,
+                                "show": true
+                            }
+                        ],
+                        "outcome": [
+                            {
+                                "variable": "health",
+                                "value": -1,
+                                "behaviour": "offset"
+                            }
+                        ],
+                        "route": ""
+                    }
+                ]
+            }
+        ]
+    }
+]
