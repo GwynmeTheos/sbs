@@ -8,13 +8,15 @@ enum GameThemeMode {
 class GameTheme {
   GameThemeMode mode;
 
-  
-
   GameTheme._({
-    this.mode = GameThemeMode.dark
+    this.mode = GameThemeMode.dark,
+
   });
 
-  factory GameTheme.loadTheme() {
-    return
+  factory GameTheme.dark() {
+    return GameTheme._(
+      mode: GameThemeMode.dark,
+      
+    );
   }
 }

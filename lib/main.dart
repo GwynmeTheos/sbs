@@ -3,7 +3,7 @@ import 'package:sbs/package_header.dart';
 
 void main() {
   GameData gameData = GameData.preloadFromDisk();
-  GameTheme themeData = GameTheme.loadTheme();
+  GameTheme themeData = GameTheme.dark();
 
   runApp(
     MaterialApp(
@@ -46,6 +46,11 @@ class _GameCanvasState extends State<GameCanvas> {
   
   @override
   Widget build(BuildContext context) {
-    return const Text("Hello, world!");
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Hello, world!"),
+      ),
+      body: Text("Goodbye, world"),
+    );
   }
 }
