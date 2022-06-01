@@ -17,4 +17,5 @@ An android and Desktop app engine for simple visual novels, written in Flutter. 
 ## FAQ
 
 **Q: Will this be available for iOS/MacOS?**
+
 A: Not for the foreseeable future. To my knowledge, there is no way to develop apps for iOS/MacOS without XCode (which requires a MacBook) and an iPhone, none of which I own - I also have no plans of acquiring one or renting a remote desktop, just for iOS/MacOS development, anytime soon.
