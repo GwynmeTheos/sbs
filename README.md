@@ -1,16 +1,20 @@
-# sbs
+# SBS (Name Pending)
 
-A new Flutter project.
+An android and Desktop app engine for simple visual novels, written in Flutter. SBS uses a simple JSON structure to store data in a way that can support easy modding. This project is still a slow work in progress due to full time work and university.
 
-## Getting Started
+## Currently Planned Feature List
 
-This project is a starting point for a Flutter application.
+- Storyboard editor
+- Sample story
 
-A few resources to get you started if this is your first Flutter project:
+## To-Do List
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- UI
+- JSON Interpreter
+- Data loader
+- Documentation
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## FAQ
+
+**Q: Will this be available for iOS/MacOS?**
+A: Not for the foreseeable future. To my knowledge, there is no way to develop apps for iOS/MacOS without XCode (which requires a MacBook) and an iPhone, none of which I own - I also have no plans of acquiring one or renting a remote desktop, just for iOS/MacOS development, anytime soon.
