@@ -23,10 +23,35 @@
         }
     },
     {
+        "name": "dexterity",
+        "initialValue": 0,
+        "sidebar": {
+            "showSidebar": true,
+            "showValue": true,
+            "min": -10,
+            "max": 10,
+            "behaviour": "pointer"
+        },
+        "descriptor": {
+            "behaviour": "closest",
+            "possibleValues": [
+                {
+                    "value": -10,
+                    "body": "slow"
+                },
+                {
+                    "value": 10,
+                    "body": "fast"
+                }
+            ]
+        }
+    },
+    {
         "name": "body",
         "base": 0,
         "sidebar": {
-            "show": false,
+            "showSidebar": true,
+            "showValue": true,
             "min": null,
             "max": null,
             "behaviour": null

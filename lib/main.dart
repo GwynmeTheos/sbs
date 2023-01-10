@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lorem/flutter_lorem.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:sbs/package_header.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   /* TODO: Fetch user prefs from disk, including prefeered theme and game options. Do this before initializing any other data. */
   GameData gameData = GameData.preloadFromDisk(); // Game's save and event/variable data
   GameTheme themeData = GameTheme.dark(); // Game's UI theme data, includes colors and common widgets
 
+  await gameData.loadData();
   runApp(
     MaterialApp(
       title: 'Something',
@@ -26,12 +30,15 @@ class GameCanvas extends StatefulWidget{
   GameTheme theme;
 
   @override
-  _GameCanvasState createState() => _GameCanvasState();
+  _GameCanvasState createState() => _GameCanvasState(data: this.data, theme: this.theme);
 }
 
 class _GameCanvasState extends State<GameCanvas> {
   
-  _GameCanvasState();
+  GameData data;
+  GameTheme theme;
+  
+  _GameCanvasState({required this.data, required this.theme});
 
   @override
   void initState() {
@@ -43,8 +50,52 @@ class _GameCanvasState extends State<GameCanvas> {
     super.dispose();
   }
 
-  List<Widget>? generateScene(BuildContext ctx) {
-    
+  List<Widget>? generateScene(BuildContext ctx, MediaQueryData mqd) {
+    List<Widget> retLis = new List<Widget>.empty(growable: true);
+    try {
+      List<Widget> textTileLis = buildTextTiles(ctx, mqd);
+      List<Widget> choiceTileLis = buildChoiceTiles(ctx, mqd);
+
+      textTileLis.forEach((textTile) {
+        retLis.add(textTile);
+        retLis.add(SizedBox(height: 10,));
+      });
+      choiceTileLis.forEach((choiceTile) {
+        retLis.add(choiceTile);
+        retLis.add(SizedBox(height: 5,));
+      });
+
+      return retLis;
+    } catch (exx) {
+      print(exx);
+      return null;
+    }
+  }
+
+  List<Widget> buildTextTiles(BuildContext ctx, MediaQueryData mqd) {
+    List<Widget> retLis = new List<Widget>.empty(growable: true);
+    try {
+      Markdown(
+        data: Interpreter.parse(
+          this.data.gameStateScn?.body ?? "Error fetching current scene.",
+          this.data.variables
+        ),
+      );
+
+
+      return retLis;
+    } catch (exx) {
+      return retLis;
+    }
+  }
+  List<Widget> buildChoiceTiles(BuildContext ctx, MediaQueryData mqd) {
+    List<Widget> retLis = new List<Widget>.empty(growable: true);
+    try {
+      
+      return retLis;
+    } catch (exx) {
+      return retLis;
+    }
   }
   
   @override
@@ -70,7 +121,7 @@ class _GameCanvasState extends State<GameCanvas> {
         ),
         child: ListView(
           physics: const BouncingScrollPhysics(),
-          children: this.generateScene(context) ?? []
+          children: this.generateScene(context, mqd) ?? []
         ),
       ),
     );

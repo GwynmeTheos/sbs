@@ -9,14 +9,14 @@
                 "body": "Test Test Test Test",
                 "choices": [
                     {
-                        "body": "Do a thing with ${str}",
+                        "body": "Do a thing with ${strength}",
                         "requirements": [
                             {
                                 "variable": "strength",
                                 "min": 10,
                                 "max": null,
                                 "exact": null,
-                                "show": true
+                                "hidden": false
                             }
                         ],
                         "outcome": [
@@ -26,7 +26,34 @@
                                 "behaviour": "offset"
                             }
                         ],
-                        "route": ""
+                        "route": "EG_001-002"
+                    }
+                ]
+            },
+            {
+                "id": "EG_001-002",
+                "name": "Test Scene 2",
+                "body": "Test Test Test Test",
+                "choices": [
+                    {
+                        "body": "Do a thing with ${dexterity}",
+                        "requirements": [
+                            {
+                                "variable": "dexterity",
+                                "min": 10,
+                                "max": null,
+                                "exact": null,
+                                "hidden": false
+                            }
+                        ],
+                        "outcome": [
+                            {
+                                "variable": "health",
+                                "value": 1,
+                                "behaviour": "offset"
+                            }
+                        ],
+                        "route": "EG_001-001"
                     }
                 ]
             }
