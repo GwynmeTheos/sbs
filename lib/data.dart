@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_this
 
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:developer';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,17 +39,19 @@ class GameData {
       // Load variables
       await rootBundle.loadString("assets/variables/var_base00.json")
         .then((value) {
-          List<dynamic> varRes = jsonDecode(value);
+          List<dynamic> varRes = jsonDecode(value); 
           for (var variable in varRes){
-            this.variables[variable['name']] = Variable.fromJson(variable);
+            if (variable['name'] != null) {
+              this.variables[variable['name']] = Variable.fromMap(variable);
+            }
           }
         });
       // Load events
-      await rootBundle.loadString("assets/variables/evt_base00.json")
+      await rootBundle.loadString("assets/events/evt_base00.json")
         .then((value) {
           List<dynamic> evtRes = jsonDecode(value);
           for (var event in evtRes){
-            this.events[event['id']] = Event.fromJson(event);
+            this.events[event['id']] = Event.fromMap(event);
           }
         });
       // Load root event
@@ -70,7 +74,8 @@ class GameData {
       }
 
       return true;
-    } catch (exx) {
+    } catch (exx, stack) {
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return false;
     }
   }
@@ -109,38 +114,52 @@ class Variable {
     required this.max,
   });
 
-  static Variable? fromJson(String json){
+  static Variable? fromMap(Map<String, dynamic> map){
     try {
-      Map<String, dynamic> res = jsonDecode(json);
       return Variable(
-        name: res['name'],
-        variableBehaviour: Variable.variableBehaviourFromString(res['descriptor']['behaviour']),
-        sidebarBehaviour: Variable.sidebarBehaviourFromString(res['sidebar']['behaviour']),
-        possibleValues: List.from(res['descriptor']['possibleValues'], growable: false),
-        showSidebar: res['sidebar']['showSidebar'],
-        showValue: res['sidebar']['showValue'],
-        min: res['sidebar']['min'],
-        max: res['sidebar']['max']);
-    } catch (exx){
-      print(exx);
+        name: map['name'],
+        value: map['initialValue'] ?? 0,
+        variableBehaviour: Variable.variableBehaviourFromString(map['descriptor']['behaviour']),
+        sidebarBehaviour: Variable.sidebarBehaviourFromString(map['sidebar']['behaviour']),
+        possibleValues: List.from(map['descriptor']['possibleValues'] ?? [], growable: false),
+        showSidebar: map['sidebar']['showSidebar'] ?? false,
+        showValue: map['sidebar']['showValue'] ?? false,
+        min: map['sidebar']['min'] ?? 0,
+        max: map['sidebar']['max'] ?? 0);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return null;
     }
   }
 
-  static VariableBehaviour variableBehaviourFromString(String name){
+  static Variable? fromJson(String json){
+    try {
+      Map<String, dynamic> res = jsonDecode(json);
+      return fromMap(res);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
+      return null;
+    }
+  }
+
+  static VariableBehaviour variableBehaviourFromString(String? name){
     switch(name){
       case 'closest':
         return VariableBehaviour.closest;
+      case null:
+        return VariableBehaviour.none;
       default:
         return VariableBehaviour.none;
     }
   }
-  static SideBarBehaviour sidebarBehaviourFromString(String name){
+  static SideBarBehaviour sidebarBehaviourFromString(String? name){
     switch(name){
       case 'pointer':
         return SideBarBehaviour.pointer;
       case 'filler':
         return SideBarBehaviour.filler;
+      case null:
+        return SideBarBehaviour.none;
       default:
         return SideBarBehaviour.none;
     }
@@ -158,19 +177,28 @@ class Event {
     required this.scenes,
   });
 
+  static Event? fromMap(Map<String, dynamic> map) {
+    try {
+      return Event(
+        id: map['id'],
+        name: map['name'],
+        scenes: List.generate(
+          map['scenes'].length,
+          (index) => Scene.fromMap(map['scenes'][index])
+        ) 
+      );
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
+      return null;
+    }
+  }
+
   static Event? fromJson(String json){
     try {
       Map<String, dynamic> res = jsonDecode(json);
-      return Event(
-        id: res['id'],
-        name: res['name'],
-        scenes: List.generate(
-          res['scenes'].length,
-          (index) => Scene.fromJson(res['scenes'][index].toString())
-        ) 
-      );
-    } catch (exx){
-      print(exx);
+      return fromMap(res);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return null;
     }
   }
@@ -189,20 +217,29 @@ class Scene {
     required this.choices,
   });
 
+  static Scene? fromMap(Map<String, dynamic> map){
+    try {
+      return Scene(
+        id: map['id'],
+        name: map['name'],
+        body: map['body'],
+        choices: List.generate(
+          map['choices'].length,
+          (index) => Choice.fromMap(map['choices'][index])
+        )
+      );
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
+      return null;
+    }
+  }
+
   static Scene? fromJson(String json){
     try {
       Map<String, dynamic> res = jsonDecode(json);
-      return Scene(
-        id: res['id'],
-        name: res['name'],
-        body: res['body'],
-        choices: List.generate(
-          res['choices'].length,
-          (index) => Choice.fromJson(res['choices'][index].toString())
-        )
-      );
-    } catch (exx){
-      print(exx);
+      return fromMap(res);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return null;
     }
   }
@@ -221,23 +258,32 @@ class Choice {
     required this.route,
   });
 
+  static Choice? fromMap(Map<String, dynamic> map){
+    try {
+      return Choice(
+        body: map['body'],
+        requirements: List.generate(
+          map['requirements'].length,
+          (index) => Requirement.fromMap(map['requirements'][index])
+        ),
+        outcomes: List.generate(
+          map['outcomes'].length,
+          (index) => Outcome.fromMap(map['outcomes'][index])
+        ),
+        route: map['route']
+      );
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
+      return null;
+    }
+  }
+
   static Choice? fromJson(String json){
     try {
       Map<String, dynamic> res = jsonDecode(json);
-      return Choice(
-        body: res['body'],
-        requirements: List.generate(
-          res['requirements'].length,
-          (index) => Requirement.fromJson(res['requirements'][index].toString())
-        ),
-        outcomes: List.generate(
-          res['outcomes'].length,
-          (index) => Outcome.fromJson(res['outcomes'][index].toString())
-        ),
-        route: res['route']
-      );
-    } catch (exx){
-      print(exx);
+      return fromMap(res);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return null;
     }
   }
@@ -258,18 +304,27 @@ class Requirement {
     required this.hidden,
   });
 
+  static Requirement? fromMap(Map<String, dynamic> map){
+    try {
+      return Requirement(
+        variable: map['variable'],
+        min: map['min'],
+        max: map['max'],
+        exact: map['exact'],
+        hidden: map['hidden']
+      );
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
+      return null;
+    }
+  }
+
   static Requirement? fromJson(String json){
     try {
       Map<String, dynamic> res = jsonDecode(json);
-      return Requirement(
-        variable: res['variable'],
-        min: res['min'],
-        max: res['max'],
-        exact: res['exact'],
-        hidden: res['hidden']
-      );
-    } catch (exx){
-      print(exx);
+      return fromMap(res);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return null;
     }
   }
@@ -290,24 +345,35 @@ class Outcome {
     required this.behaviour,
   });
 
+  static Outcome? fromMap(Map<String, dynamic> map){
+    try {
+      return Outcome(
+        variable: map['variable'],
+        value: map['value'],
+        behaviour: outcomeBehaviourFromString(map['behaviour'])
+      );
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
+      return null;
+    }
+  }
+
   static Outcome? fromJson(String json){
     try {
       Map<String, dynamic> res = jsonDecode(json);
-      return Outcome(
-        variable: res['variable'],
-        value: res['value'],
-        behaviour: res['behaviour']
-      );
-    } catch (exx){
-      print(exx);
+      return fromMap(res);
+    } catch (exx, stack){
+      log('${exx.toString()}\n\t${stack.toString()}', time: DateTime.now());
       return null;
     }
   }
   
-  static OutcomeBehaviour outcomeBehaviourFromString(String name){
+  static OutcomeBehaviour outcomeBehaviourFromString(String? name){
     switch(name){
       case 'offset':
         return OutcomeBehaviour.offset;
+      case null:
+        return OutcomeBehaviour.none;
       default:
         return OutcomeBehaviour.none;
     }
@@ -334,7 +400,7 @@ class Save {
       if (this.loadType != null) prefs.setString("loadType", this.loadType!);
 
       return true;
-    } catch (exx) {
+    } catch (exx, stack) {
       return false;
     }
   }

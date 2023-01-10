@@ -19,7 +19,7 @@
                                 "hidden": false
                             }
                         ],
-                        "outcome": [
+                        "outcomes": [
                             {
                                 "variable": "health",
                                 "value": -1,
@@ -46,7 +46,7 @@
                                 "hidden": false
                             }
                         ],
-                        "outcome": [
+                        "outcomes": [
                             {
                                 "variable": "health",
                                 "value": 1,
