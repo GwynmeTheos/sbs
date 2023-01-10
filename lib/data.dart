@@ -6,6 +6,8 @@ import 'dart:developer';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:sbs/package_header.dart';
+
 class GameData {
   Map<String, Event?> events = new Map<String, Event?>();
   Map<String, Variable?> variables = new Map<String, Variable?>();
@@ -60,6 +62,7 @@ class GameData {
       String? lastKey = this.save?.eventHist?.last;
       if (lastKey == null) {
         this.gamestateEvt = this.rootEvent;
+        this.gameStateScn = this.gamestateEvt!.scenes[0];
       } else {
         List<String> keys = lastKey.split("-");
         this.gamestateEvt = this.events[keys[0]];
@@ -113,6 +116,18 @@ class Variable {
     required this.min,
     required this.max,
   });
+
+  String? get currentDescriptor {
+    switch (this.variableBehaviour){
+      case VariableBehaviour.closest:
+        List<double> values = possibleValues.map((e) => Utils.distanceFromDouble(value.toDouble(), e['value'].toDouble())).toList();
+        values
+
+        return null;
+      case VariableBehaviour.none:
+        return null;
+    }
+  }
 
   static Variable? fromMap(Map<String, dynamic> map){
     try {

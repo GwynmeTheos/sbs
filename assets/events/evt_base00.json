@@ -6,7 +6,7 @@
             {
                 "id": "EG_001-001",
                 "name": "Test Scene 1",
-                "body": "Test Test Test Test",
+                "body": "Test Test Test ${strength}",
                 "choices": [
                     {
                         "body": "Do a thing with ${strength}",
