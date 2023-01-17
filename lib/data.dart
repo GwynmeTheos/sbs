@@ -87,6 +87,7 @@ class GameData {
 
 enum VariableBehaviour{
   closest,
+  single,
   none
 }
 enum SideBarBehaviour{
@@ -120,10 +121,22 @@ class Variable {
   String? get currentDescriptor {
     switch (this.variableBehaviour){
       case VariableBehaviour.closest:
-        List<double> values = possibleValues.map((e) => Utils.distanceFromDouble(value.toDouble(), e['value'].toDouble())).toList();
-        values
+        int lowestIndex = 0;
+        double lowestVal = Utils.distanceFromDouble(
+            value.toDouble(),
+            possibleValues[0]['value'].toDouble()
+          );
+        for(int i=1;i<possibleValues.length;i++){
+          double aux = Utils.distanceFromDouble(
+            value.toDouble(),
+            possibleValues[i]['value'].toDouble()
+          );
+          if (aux < lowestVal) lowestIndex = i;
+        }
 
-        return null;
+        return possibleValues[lowestIndex]['body'];
+      case VariableBehaviour.single:
+        return possibleValues.first['body'];
       case VariableBehaviour.none:
         return null;
     }
@@ -161,6 +174,8 @@ class Variable {
     switch(name){
       case 'closest':
         return VariableBehaviour.closest;
+      case 'single':
+        return VariableBehaviour.single;
       case null:
         return VariableBehaviour.none;
       default:

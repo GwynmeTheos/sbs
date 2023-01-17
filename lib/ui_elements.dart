@@ -1,4 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
+import 'package:sbs/package_header.dart';
 
 enum GameThemeMode {
   dark,
@@ -25,5 +29,21 @@ class GameTheme {
       mode: GameThemeMode.dark,
       appbarBackgroundColor: Colors.black
     );
+  }
+}
+
+class UIBuilder {
+  static Widget drawText(BuildContext context,
+    Platform platform,
+    String data
+  ) {
+    return MarkdownBody(
+      
+      data: data
+    );
+  }
+
+  static Widget drawChoice(BuildContext context, Platform platform) {
+    return Container();
   }
 }

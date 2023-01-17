@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_lorem/flutter_lorem.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -75,13 +77,12 @@ class _GameCanvasState extends State<GameCanvas> {
   List<Widget> buildTextTiles(BuildContext ctx, MediaQueryData mqd) {
     List<Widget> retLis = new List<Widget>.empty(growable: true);
     try {
+      Platform platform = Platform.
       retLis.add(
-        MarkdownBody(
-          
-          data: Interpreter.parse(
-            this.data.gameStateScn?.body ?? "Error fetching current scene.",
-            this.data.variables
-          ),
+        UIBuilder.drawText(
+          context,
+          platform,
+          data
         )
       );
       return retLis;
