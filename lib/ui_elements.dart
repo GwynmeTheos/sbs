@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -32,18 +32,62 @@ class GameTheme {
   }
 }
 
+enum PlatformUI {
+  desktop,
+  web,
+  mobile,
+  none
+}
 class UIBuilder {
-  static Widget drawText(BuildContext context,
-    Platform platform,
-    String data
-  ) {
-    return MarkdownBody(
-      
-      data: data
-    );
+  static PlatformUI platformFromString(String platform) {
+    if (kIsWeb) return PlatformUI.web;
+    switch (platform){
+      case ('android'):
+      case ('ios'):
+        return PlatformUI.mobile;
+      case ('linux'):
+      case ('macos'):
+      case ('windows'):
+        return PlatformUI.desktop;
+      case ('fuchsia'):
+      default:
+        return PlatformUI.none;
+    }
   }
 
-  static Widget drawChoice(BuildContext context, Platform platform) {
-    return Container();
+  static Widget drawText(BuildContext context,
+    String platform,
+    String data
+  ) {
+    PlatformUI platformUI = platformFromString(platform);
+
+    switch (platformUI){
+      case (PlatformUI.desktop):
+      case (PlatformUI.web):
+      case (PlatformUI.none):
+        return MarkdownBody(
+          data: data
+        );
+      case (PlatformUI.mobile):
+        return MarkdownBody(
+          data: data
+        ); 
+    }
+  }
+
+  static Widget drawChoice(
+    BuildContext context,
+    String platform
+  ) {
+    PlatformUI platformUI = platformFromString(platform);
+
+    switch (platformUI){
+      case (PlatformUI.desktop):
+      case (PlatformUI.web):
+      case (PlatformUI.none):
+        return Container();
+      case (PlatformUI.mobile):
+        return Container();
+    }
   }
 }

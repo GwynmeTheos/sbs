@@ -77,12 +77,14 @@ class _GameCanvasState extends State<GameCanvas> {
   List<Widget> buildTextTiles(BuildContext ctx, MediaQueryData mqd) {
     List<Widget> retLis = new List<Widget>.empty(growable: true);
     try {
-      Platform platform = Platform.
       retLis.add(
         UIBuilder.drawText(
           context,
-          platform,
-          data
+          Platform.operatingSystem,
+          Interpreter.parse(
+            this.data.gameStateScn?.body ?? "Error fetching current scene.",
+            this.data.variables
+          ),
         )
       );
       return retLis;
